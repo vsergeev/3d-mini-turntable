@@ -78,7 +78,7 @@ stand_usb_connector_xz_clearance = 0.1;
 stand_wire_connector_xz_clearance = 0.2;
 stand_motor_cavity_xy_clearance = 0.1;
 
-/* Lid Parameters */
+/* Base Parameters */
 
 base_z_depth = 3;
 base_lip_z_depth = 3;
@@ -294,10 +294,10 @@ module turntable() {
 module base() {
     difference() {
         union() {
-            /* Lid base */
+            /* Base */
             prism(stand_outer_xy_bottom_width, stand_outer_xy_bottom_width + stand_slope * base_z_depth, base_z_depth);
 
-            /* Lid interior */
+            /* Lip */
             translate([0, 0, base_z_depth - overlap_epsilon])
                 prism(stand_inner_xy_bottom_width - base_stand_xy_clearance - stand_slope * base_lip_z_depth,
                       stand_inner_xy_bottom_width - base_stand_xy_clearance, base_lip_z_depth + overlap_epsilon);
