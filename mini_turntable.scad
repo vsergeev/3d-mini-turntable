@@ -40,12 +40,11 @@ motor_shaft_xy_slot_width = 2.5;
 
 usb_connector_x_width = 7.70;
 usb_connector_z_height = 3.90;
-usb_connector_y_depth = 9.50;
+usb_connector_y_depth = 12;
 
-usb_connector_slot_x_width = 0.80;
-usb_connector_slot_y_depth = 6.65;
-usb_connector_slot_y_pitch = 7.40;
-usb_connector_slot_y_offset = 1.20;
+usb_connector_slot_x_width = 0.50;
+usb_connector_slot_y_depth = 6.25;
+usb_connector_slot_y_offset = 1.00;
 usb_connector_slot_z_depth = 2;
 
 wire_connector_xz_diameter = 3.0;
@@ -143,9 +142,9 @@ module profile_usb_connector_footprint() {
 module profile_usb_connector_slot_footprint() {
     translate([0, usb_connector_slot_y_offset / 2]) {
         union() {
-            translate([usb_connector_slot_y_pitch / 2, 0])
+            translate([usb_connector_x_width / 2, 0])
                 square([usb_connector_slot_x_width, usb_connector_slot_y_depth], center=true);
-            translate([-usb_connector_slot_y_pitch / 2, 0])
+            translate([-usb_connector_x_width / 2, 0])
                 square([usb_connector_slot_x_width, usb_connector_slot_y_depth], center=true);
         }
     }
