@@ -38,14 +38,17 @@ motor_shaft_z_depth = 10;
 motor_shaft_xy_diameter = 3;
 motor_shaft_xy_slot_width = 2.5;
 
-usb_connector_x_width = 7.70;
-usb_connector_z_height = 3.90;
-usb_connector_y_depth = 12;
+usb_connector_x_width = 7.40;
+usb_connector_z_height = 2.30;
+usb_connector_y_depth = 6.00;
 
-usb_connector_slot_x_width = 0.50;
-usb_connector_slot_y_depth = 6.25;
-usb_connector_slot_y_offset = 1.00;
-usb_connector_slot_z_depth = 2;
+usb_connector_pcb_x_width = 20.32;
+usb_connector_pcb_y_height = 11.43;
+usb_connector_pcb_z_depth = 1.5;
+
+usb_connector_pcb_solder_x_width = 12.5;
+usb_connector_pcb_solder_y_height = 3;
+usb_connector_pcb_solder_z_depth = 0.8;
 
 wire_connector_xz_diameter = 3.0;
 
@@ -90,7 +93,7 @@ base_motor_peg_z_depth = 0.8;
 base_wire_connector_y_length = 12;
 
 base_stand_xy_clearance = 0.05;
-base_usb_connector_xy_clearance = 0.25;
+base_usb_connector_xy_clearance = 0.10;
 base_wire_connector_x_clearance = -0.10;
 
 /* Constants */
@@ -111,7 +114,7 @@ stand_inner_xy_top_width = stand_outer_xy_top_width + stand_slope * (motor_z_dep
 stand_outer_xy_bottom_width = stand_outer_xy_top_width + (stand_slope * stand_z_depth);
 stand_inner_xy_bottom_width = stand_outer_xy_bottom_width - stand_wall_xy_thickness * 2;
 
-usb_connector_position = [0, -stand_outer_xy_bottom_width / 2 + usb_connector_y_depth / 2 + 0.5];
+usb_connector_position = [0, (usb_connector_pcb_y_height + 2 * base_usb_connector_xy_clearance) / 2 - stand_inner_xy_bottom_width / 2];
 
 /******************************************************************************/
 /* 2D Profiles */
@@ -136,18 +139,17 @@ module profile_usb_connector_cutout() {
 }
 
 module profile_usb_connector_footprint() {
-    square([usb_connector_x_width, usb_connector_y_depth], center=true);
+    translate([0, -(usb_connector_pcb_y_height - usb_connector_y_depth) / 2 - 1])
+        square([usb_connector_x_width, usb_connector_y_depth], center=true);
 }
 
-module profile_usb_connector_slot_footprint() {
-    translate([0, usb_connector_slot_y_offset / 2]) {
-        union() {
-            translate([usb_connector_x_width / 2, 0])
-                square([usb_connector_slot_x_width, usb_connector_slot_y_depth], center=true);
-            translate([-usb_connector_x_width / 2, 0])
-                square([usb_connector_slot_x_width, usb_connector_slot_y_depth], center=true);
-        }
-    }
+module profile_usb_connector_pcb_footprint() {
+    square([usb_connector_pcb_x_width, usb_connector_pcb_y_height], center=true);
+}
+
+module profile_usb_connector_pcb_solder_footprint() {
+    translate([0, (usb_connector_pcb_y_height - usb_connector_pcb_solder_y_height) / 2])
+        square([usb_connector_pcb_solder_x_width, usb_connector_pcb_solder_y_height], center=true);
 }
 
 module profile_wire_connector_cutout() {
@@ -213,8 +215,16 @@ module motor() {
 
 module usb_connector() {
     color("silver") {
-        linear_extrude(usb_connector_z_height)
-            profile_usb_connector_footprint();
+        union() {
+            /* PCB */
+            linear_extrude(usb_connector_pcb_z_depth)
+                profile_usb_connector_pcb_footprint();
+
+            /* Connector */
+            translate([0, 0, usb_connector_pcb_z_depth])
+                linear_extrude(usb_connector_z_height)
+                    profile_usb_connector_footprint();
+        }
     }
 }
 
@@ -313,16 +323,17 @@ module base() {
         }
 
         if (connector_type == "usb") {
-            /* USB Connector footprint */
-            translate(concat(usb_connector_position, base_z_depth - overlap_epsilon))
-                linear_extrude(base_lip_z_depth + 2 * overlap_epsilon)
+            /* USB Connector PCB footprint */
+            translate(concat(usb_connector_position, base_z_depth - usb_connector_pcb_z_depth - overlap_epsilon))
+                linear_extrude(base_lip_z_depth + usb_connector_pcb_z_depth + 2 * overlap_epsilon)
                     offset(base_usb_connector_xy_clearance)
-                        profile_usb_connector_footprint();
+                        profile_usb_connector_pcb_footprint();
 
-            /* USB Connector mount base */
-            translate(concat(usb_connector_position, base_z_depth - usb_connector_slot_z_depth))
-                linear_extrude(usb_connector_slot_z_depth + overlap_epsilon)
-                    profile_usb_connector_slot_footprint();
+            /* USB Connector PCB solder footprint */
+            translate(concat(usb_connector_position, base_z_depth - usb_connector_pcb_z_depth - usb_connector_pcb_solder_z_depth))
+                linear_extrude(usb_connector_pcb_solder_z_depth + overlap_epsilon)
+                    offset(base_usb_connector_xy_clearance)
+                        profile_usb_connector_pcb_solder_footprint();
         } else if (connector_type == "wire") {
             /* Wire Connector footprint */
             translate([0, -(stand_inner_xy_bottom_width - base_wire_connector_y_length) / 2,
@@ -344,7 +355,7 @@ module assembly() {
     }
 
     if (show_usb_connector) {
-        translate(usb_connector_position)
+        translate(concat(usb_connector_position, -usb_connector_pcb_z_depth))
             usb_connector();
     }
 
