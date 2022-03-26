@@ -85,7 +85,7 @@ base_lip_z_depth = 3;
 base_motor_peg_base_xy_diameter = 5.5;
 base_motor_peg_base_z_depth = stand_bottom_z_gap - base_lip_z_depth;
 base_motor_peg_xy_diameter = 1.75;
-base_motor_peg_z_depth = 0.6;
+base_motor_peg_z_depth = 0.8;
 
 base_wire_connector_y_length = 12;
 
