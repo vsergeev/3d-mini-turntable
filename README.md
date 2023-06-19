@@ -2,7 +2,7 @@
 
 <table>
 <tr>
-<td><a href="images/video.gif"><img src="images/video.gif" alt="Video"/></a></td>
+<td align="center"><a href="images/video.gif"><img src="images/video.gif" alt="Video"/></a></td>
 <td><a href="images/rendering1.png"><img src="images/rendering1.thumb.png" alt="Rendering 1"/></a></td>
 </tr>
 <td><a href="images/rendering2.png"><img src="images/rendering2.thumb.png" alt="Rendering 2"/></a></td>
