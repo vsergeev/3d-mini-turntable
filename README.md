@@ -32,6 +32,6 @@ Direct wire and USB connector modes are supported. The direct wire mode leaves a
 * 10rpm 6V DC motor - https://www.amazon.com/gp/product/B01ES98QSG/
 * USB micro-B breakout board - https://www.amazon.com/gp/product/B09B1M4YLM/
 
-**Thingiverse:** TBD
+**Thingiverse:** https://www.thingiverse.com/thing:6085468
 
 **License**: [![CC-BY](https://i.creativecommons.org/l/by/4.0/80x15.png)](http://creativecommons.org/licenses/by/4.0/)
