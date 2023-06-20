@@ -4,6 +4,9 @@
  * CC-BY-4.0
  *
  * Release Notes
+ *  * v1.1 - 03/25/2022
+ *      * Change USB connector to USB breakout board.
+ *      * Increase base motor peg depth.
  *  * v1.0 - 02/19/2022
  *      * Initial release.
  ********************************************************/
